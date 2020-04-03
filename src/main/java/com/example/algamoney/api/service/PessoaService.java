@@ -37,13 +37,10 @@ public class PessoaService {
 	}
 	
 	public Pessoa buscarPessoaPeloCodigo(Long codigo) {
-		//Optional<Pessoa> pessoaSalva = pessoaRepository.findById(codigo);
-		Pessoa pessoaSalva = pessoaRepository.findOne(codigo);
-		//if (!pessoaSalva.isPresent()) {
-		if (pessoaSalva != null) {
+		Optional<Pessoa> pessoaSalva = pessoaRepository.findByCodigo(codigo);
+		if (!pessoaSalva.isPresent()) {
 			throw new EmptyResultDataAccessException(1);
 		}
-		//return pessoaSalva.get();
-	return pessoaSalva;
+		return pessoaSalva.get();
 	}
 }
