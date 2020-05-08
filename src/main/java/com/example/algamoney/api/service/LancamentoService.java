@@ -1,10 +1,15 @@
 package com.example.algamoney.api.service;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import com.example.algamoney.api.config.property.AlgamoneyApiProperty.S3;
 import com.example.algamoney.api.model.Lancamento;
 import com.example.algamoney.api.model.Pessoa;
 import com.example.algamoney.api.repository.LancamentoRepository;
@@ -93,12 +98,12 @@ public class LancamentoService {
 		return lancamentoRepository.save(lancamento);
 	}
 
-//	public Lancamento atualizar(Long codigo, Lancamento lancamento) {
-//		Lancamento lancamentoSalvo = buscarLancamentoExistente(codigo);
-//		if (!lancamento.getPessoa().equals(lancamentoSalvo.getPessoa())) {
-//			validarPessoa(lancamento);
-//		}
-//		
+	public Lancamento atualizar(Long codigo, Lancamento lancamento) {
+		Lancamento lancamentoSalvo = buscarLancamentoExistente(codigo);
+		if (!lancamento.getPessoa().equals(lancamentoSalvo.getPessoa())) {
+			validarPessoa(lancamento);
+		}
+		
 //		if (StringUtils.isEmpty(lancamento.getAnexo())
 //				&& StringUtils.hasText(lancamentoSalvo.getAnexo())) {
 //			s3.remover(lancamentoSalvo.getAnexo());
@@ -106,11 +111,11 @@ public class LancamentoService {
 //				&& !lancamento.getAnexo().equals(lancamentoSalvo.getAnexo())) {
 //			s3.substituir(lancamentoSalvo.getAnexo(), lancamento.getAnexo());
 //		}
-//
-//		BeanUtils.copyProperties(lancamento, lancamentoSalvo, "codigo");
-//
-//		return lancamentoRepository.save(lancamentoSalvo);
-//	}
+
+		BeanUtils.copyProperties(lancamento, lancamentoSalvo, "codigo");
+
+		return lancamentoRepository.save(lancamentoSalvo);
+	}
 
 	private void validarPessoa(Lancamento lancamento) {
 		Pessoa pessoa = null;
@@ -124,12 +129,12 @@ public class LancamentoService {
 		
 	}
 
-//	private Lancamento buscarLancamentoExistente(Long codigo) {
-//		Optional<Lancamento> lancamentoSalvo = lancamentoRepository.findById(codigo);
-//		if (!lancamentoSalvo.isPresent()) {
-//			throw new IllegalArgumentException();
-//		}
-//		return lancamentoSalvo.get();
-//	}
+	private Lancamento buscarLancamentoExistente(Long codigo) {
+		Optional<Lancamento> lancamentoSalvo = lancamentoRepository.findByCodigo(codigo);
+		if (!lancamentoSalvo.isPresent()) {
+			throw new IllegalArgumentException();
+		}
+		return lancamentoSalvo.get();
+	}
 
 }
