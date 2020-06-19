@@ -1,5 +1,9 @@
 package com.example.algamoney.api.resource;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -8,6 +12,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.algamoney.api.dto.LancamentoEstatisticaCategoria;
 import com.example.algamoney.api.dto.LancamentoEstatisticaDia;
@@ -48,6 +54,19 @@ public class LancamentoResource {
 	
 	@Autowired
 	private ApplicationEventPublisher publisher;
+	
+	@Autowired
+	private MessageSource messageSource;
+	
+	@PostMapping("/anexo")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
+	public String uploadAnexo(@RequestParam MultipartFile anexo) throws IOException {
+		OutputStream out = new FileOutputStream("C:\\Users\\silve\\OneDrive\\Área de Trabalho\\anexo--" + 
+				anexo.getOriginalFilename());
+		out.write(anexo.getBytes());
+		out.close();
+		return "ok";
+	}
 	
 	@GetMapping("/relatorios/por-pessoa")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")

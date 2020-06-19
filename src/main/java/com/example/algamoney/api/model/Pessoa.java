@@ -15,6 +15,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "pessoa")
@@ -33,8 +34,9 @@ public class Pessoa {
 	@Embedded
 	private Endereco endereco;
 	
+	@JsonIgnoreProperties("pessoa")
 	@Valid
-	@OneToMany(mappedBy="pessoa", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="pessoa", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Contato> contatos;
 
 	public Long getCodigo() {

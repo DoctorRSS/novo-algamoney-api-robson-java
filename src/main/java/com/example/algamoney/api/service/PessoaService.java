@@ -25,7 +25,11 @@ public class PessoaService {
 			throw new EmptyResultDataAccessException(1);
 		}
 		
-		BeanUtils.copyProperties(pessoa, pessoaSalva, "codigo");
+		pessoaSalva.getContatos().clear();
+		pessoaSalva.getContatos().addAll(pessoa.getContatos());
+		pessoaSalva.getContatos().forEach(c -> c.setPessoa(pessoaSalva));
+		
+		BeanUtils.copyProperties(pessoa, pessoaSalva, "codigo", "contatos");
 		
 		return pessoaRepository.save(pessoaSalva);
 	}
@@ -42,5 +46,10 @@ public class PessoaService {
 			throw new EmptyResultDataAccessException(1);
 		}
 		return pessoaSalva.get();
+	}
+
+	public Pessoa salvar(Pessoa pessoa) {
+		pessoa.getContatos().forEach(c -> c.setPessoa(pessoa));
+		return pessoaRepository.save(pessoa);
 	}
 }
