@@ -15,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.example.algamoney.api.dto.LancamentoEstatisticaPessoa;
 import com.example.algamoney.api.mail.Mailer;
@@ -25,6 +26,7 @@ import com.example.algamoney.api.repository.LancamentoRepository;
 import com.example.algamoney.api.repository.PessoaRepository;
 import com.example.algamoney.api.repository.UsuarioRepository;
 import com.example.algamoney.api.service.exception.PessoaInexistenteOuInativaException;
+import com.example.algamoney.api.storage.S3;
 
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -50,8 +52,8 @@ public class LancamentoService {
 	@Autowired
 	private Mailer mailer;
 	
-//	@Autowired
-//	private S3 s3;
+	@Autowired
+	private S3 s3;
 	
 	//@Scheduled(cron = "0 0 6 * * *")
 	@Scheduled(fixedDelay = 1000 * 60 * 30) // 30 minutos
@@ -107,9 +109,9 @@ public class LancamentoService {
 	public Lancamento salvar(Lancamento lancamento) {
 		validarPessoa(lancamento);
 		
-//		if (StringUtils.hasText(lancamento.getAnexo())) {
-//			s3.salvar(lancamento.getAnexo());
-//		}
+		if (StringUtils.hasText(lancamento.getAnexo())) {
+			s3.salvar(lancamento.getAnexo());
+		}
 
 		return lancamentoRepository.save(lancamento);
 	}
@@ -120,13 +122,13 @@ public class LancamentoService {
 			validarPessoa(lancamento);
 		}
 		
-//		if (StringUtils.isEmpty(lancamento.getAnexo())
-//				&& StringUtils.hasText(lancamentoSalvo.getAnexo())) {
-//			s3.remover(lancamentoSalvo.getAnexo());
-//		} else if (StringUtils.hasText(lancamento.getAnexo())
-//				&& !lancamento.getAnexo().equals(lancamentoSalvo.getAnexo())) {
-//			s3.substituir(lancamentoSalvo.getAnexo(), lancamento.getAnexo());
-//		}
+		if (StringUtils.isEmpty(lancamento.getAnexo())
+				&& StringUtils.hasText(lancamentoSalvo.getAnexo())) {
+			s3.remover(lancamentoSalvo.getAnexo());
+		} else if (StringUtils.hasText(lancamento.getAnexo())
+				&& !lancamento.getAnexo().equals(lancamentoSalvo.getAnexo())) {
+			s3.substituir(lancamentoSalvo.getAnexo(), lancamento.getAnexo());
+		}
 
 		BeanUtils.copyProperties(lancamento, lancamentoSalvo, "codigo");
 
