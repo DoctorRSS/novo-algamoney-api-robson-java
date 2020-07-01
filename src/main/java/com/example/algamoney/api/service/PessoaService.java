@@ -19,11 +19,7 @@ public class PessoaService {
 	
 	public Pessoa atualizar(Long codigo, Pessoa pessoa) {
 		
-		Pessoa pessoaSalva = pessoaRepository.findOne(codigo);
-		
-		if(pessoaSalva == null) {
-			throw new EmptyResultDataAccessException(1);
-		}
+		Pessoa pessoaSalva = buscarPessoaPeloCodigo(codigo);
 		
 		pessoaSalva.getContatos().clear();
 		pessoaSalva.getContatos().addAll(pessoa.getContatos());
@@ -41,7 +37,7 @@ public class PessoaService {
 	}
 	
 	public Pessoa buscarPessoaPeloCodigo(Long codigo) {
-		Optional<Pessoa> pessoaSalva = pessoaRepository.findByCodigo(codigo);
+		Optional<Pessoa> pessoaSalva = pessoaRepository.findById(codigo);
 		if (!pessoaSalva.isPresent()) {
 			throw new EmptyResultDataAccessException(1);
 		}
