@@ -33,7 +33,7 @@ public class S3Config {
 				.withRegion(Regions.US_EAST_2)
 				.build();
 		
-		if(amazonS3.doesBucketExistV2(property.getS3().getBucket())) {
+		if(!amazonS3.doesBucketExistV2(property.getS3().getBucket())) {
 			amazonS3.createBucket(
 					new CreateBucketRequest(property.getS3().getBucket()));
 			
