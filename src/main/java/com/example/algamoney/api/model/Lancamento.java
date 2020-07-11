@@ -60,7 +60,6 @@ public class Lancamento {
 	@JoinColumn(name = "codigo_pessoa")
 	private Pessoa pessoa; 
 	
-	@Transient
 	private String anexo;
 	
 	@Transient

@@ -32,7 +32,7 @@ public class Mailer {
 	@Autowired
 	private TemplateEngine thymeleaf;
 	
-	@Autowired
+/*	@Autowired
 	private LancamentoRepository repo;
 	
 	@EventListener
@@ -48,7 +48,7 @@ public class Mailer {
 		this.enviarEmail("silverarob91@gmail.com", Arrays.asList("silver.rob16@yahoo.com.br"),
 						"Testando", template, variaveis);
 		System.out.println("Terminado o envio de e-mail");
-	}
+	} */
 	
 	public void enviarEmail(String rementente, List<String> destinatarios,
 			String assunto, String template, Map<String, Object> variaveis) {
