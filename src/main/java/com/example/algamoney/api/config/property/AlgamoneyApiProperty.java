@@ -7,7 +7,8 @@ public class AlgamoneyApiProperty {
 
 	//private String originPermitida = "http://localhost:8000";
 
-	private String originPermitida = "http://localhost:4200";
+	//private String originPermitida = "http://localhost:4200";
+	private String originPermitida = "https://algamoney-ui-robson-silveira.herokuapp.com";
 	
 	private final Seguranca seguranca = new Seguranca();
 	
